@@ -2,4 +2,4 @@ hellow!
 
 UwU
 
-Click here to start! --> ['*v*'](public/index.html)
+Click here to start! --> [^u^](public/index.html)
