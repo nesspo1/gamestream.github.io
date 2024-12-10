@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Streaming</title>
+</head>
+<body>
+    <h1>Game Stream</h1>
+    <video id="gameVideo" autoplay muted></video>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-peer@9.11.0/simplepeer.min.js"></script>
+    <script>
+        const socket = io();
+        const peer = new SimplePeer({ initiator: true, trickle: false });
+
+        // When the peer connection is ready, share the offer
+        peer.on('signal', data => {
+            socket.emit('offer', data);
+        });
+
+        // When you receive a stream from the other peer, display it
+        peer.on('stream', stream => {
+            const video = document.getElementById('gameVideo');
+            video.srcObject = stream;
+            video.play();
+        });
+
+        // Handle incoming offer and send answer
+        socket.on('offer', offer => {
+            peer.signal(offer);
+        });
+
+        socket.on('answer', answer => {
+            peer.signal(answer);
+        });
+
+        socket.on('candidate', candidate => {
+            peer.signal(candidate);
+        });
+
+        // Capture screen (game) and send it to the peer
+        navigator.mediaDevices.getDisplayMedia({ video: true }).then(stream => {
+            peer.addStream(stream);
+        }).catch(err => console.error("Error capturing screen:", err));
+    </script>
+</body>
+</html>

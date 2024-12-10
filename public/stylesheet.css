@@ -1,0 +1,6 @@
+#gameVideo {
+    width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover; /* Ensures the video fits the container */
+  }
+
